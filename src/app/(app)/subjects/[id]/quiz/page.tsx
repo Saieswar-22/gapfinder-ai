@@ -107,10 +107,16 @@ export default function QuizPage({
         }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => null);
 
       if (!res.ok) {
-        setError(data.error || 'Failed to generate quiz');
+        setError(data?.error || `Failed to generate quiz (${res.status}: ${res.statusText})`);
+        setGenerating(false);
+        return;
+      }
+
+      if (!data || !data.quizId) {
+        setError('Invalid server response while generating quiz.');
         setGenerating(false);
         return;
       }
@@ -121,19 +127,22 @@ export default function QuizPage({
 
       // Fetch created quiz questions
       const quizRes = await fetch(`/api/quizzes/${data.quizId}`);
-      const quizData = await quizRes.json();
+      const quizData = await quizRes.json().catch(() => null);
 
-      if (quizRes.ok && quizData.questions?.length > 0) {
+      if (quizRes.ok && quizData?.questions?.length > 0) {
         setActiveQuizId(data.quizId);
         setQuestions(quizData.questions);
         setCurrentIndex(0);
         setSelectedAnswers({});
         setCompletedAttemptId(null);
       } else {
-        setError('No questions were generated. Ensure study materials are uploaded and mapped.');
+        setError(
+          quizData?.error ||
+            'No questions were generated. Ensure study materials are uploaded and mapped to topics.'
+        );
       }
-    } catch {
-      setError('Network error starting quiz');
+    } catch (err: any) {
+      setError(err?.message ? `Network error: ${err.message}` : 'Network error starting quiz');
     } finally {
       setGenerating(false);
     }
@@ -167,16 +176,16 @@ export default function QuizPage({
         body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => null);
 
-      if (res.ok) {
+      if (res.ok && data?.attemptId) {
         setActiveQuizId(null);
         await loadAttemptReview(data.attemptId);
       } else {
-        setError(data.error || 'Failed to submit quiz');
+        setError(data?.error || `Failed to submit quiz (${res.status}: ${res.statusText})`);
       }
-    } catch {
-      setError('Network error submitting quiz');
+    } catch (err: any) {
+      setError(err?.message ? `Network error: ${err.message}` : 'Network error submitting quiz');
     } finally {
       setSubmitting(false);
     }

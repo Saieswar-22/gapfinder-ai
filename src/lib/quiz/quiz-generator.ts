@@ -12,7 +12,6 @@ import { eq, and, sql, desc, inArray } from 'drizzle-orm';
 import { retrieveChunksForTopic } from '@/lib/rag/retrieval';
 import {
   generateMCQsFromContext,
-  verifyMCQAnswer,
   type GeneratedQuestion,
 } from '@/lib/rag/generation';
 import { validateMCQ, isDuplicateStem } from './validation';
@@ -179,15 +178,6 @@ export async function generateQuiz(options: GenerateQuizOptions): Promise<{
         // Check stem deduplication
         if (isDuplicateStem(mcq.question, existingStems)) {
           console.warn(`MCQ rejected: duplicate stem: "${mcq.question}"`);
-          continue;
-        }
-
-        // Run secondary verification solver (Rule 19C)
-        const verification = await verifyMCQAnswer(mcq.question, mcq.options, contextText);
-        if (verification !== null && verification !== mcq.correctIndex) {
-          console.warn(
-            `MCQ rejected: verification predicted index ${verification} vs generated ${mcq.correctIndex}`
-          );
           continue;
         }
 
