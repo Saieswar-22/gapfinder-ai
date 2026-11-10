@@ -1,0 +1,19 @@
+Mathematics Past Examination Paper — Algebra Section
+
+Question 1 (Page 1):
+Solve the linear equation for x:
+3(2x - 4) + 5 = 2(x + 7) - 1
+Show all intermediate steps and state the final solution.
+
+Question 2 (Page 1):
+Find the slope and y-intercept of the line given by 4x - 2y = 10.
+Write the equation in slope-intercept form and determine whether the line rises or falls from left to right.
+
+Question 3 (Page 2):
+Determine the point of intersection for the following system of linear equations using the elimination method:
+2x + 3y = 12
+5x - 3y = 9
+
+Question 4 (Page 2):
+A community theater sells adult tickets for $12 each and student tickets for $7 each. During opening night, a total of 250 tickets were sold, generating $2,450 in total revenue.
+Set up and solve a system of linear equations to determine how many adult tickets and student tickets were sold.

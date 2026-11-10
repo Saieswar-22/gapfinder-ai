@@ -1,0 +1,37 @@
+Course Syllabus: High School & College Algebra (MATH 101)
+
+Course Overview:
+This course provides a comprehensive foundation in algebraic principles, functions, equations, and mathematical problem-solving.
+
+Chapter 1: Linear Equations and Inequalities
+Topic 1.1: Solving Linear Equations
+Subtopic: One-step and multi-step equations in one variable
+Subtopic: Equations with variables on both sides and special cases (identities and contradictions)
+Topic 1.2: Graphing Linear Equations
+Subtopic: The Cartesian coordinate plane, intercepts, and slope of a line
+Subtopic: Slope-intercept form (y = mx + b) and point-slope form
+Topic 1.3: Linear Inequalities
+Subtopic: Solving single-variable linear inequalities and interval notation
+Subtopic: Graphing inequalities on a coordinate plane
+
+Chapter 2: Systems of Linear Equations
+Topic 2.1: Solving Systems Algebraically
+Subtopic: Substitution method for linear systems
+Subtopic: Elimination (addition) method for linear systems
+Topic 2.2: Applications of Linear Systems
+Subtopic: Break-even analysis and mixture problems
+
+Chapter 3: Polynomials and Factoring
+Topic 3.1: Polynomial Operations
+Subtopic: Addition, subtraction, and multiplication of polynomials
+Topic 3.2: Factoring Techniques
+Subtopic: Greatest common factor (GCF) and factoring by grouping
+Subtopic: Factoring trinomials of the form ax^2 + bx + c
+Subtopic: Special products: Difference of two squares and perfect square trinomials
+
+Chapter 4: Quadratic Equations and Functions
+Topic 4.1: Methods of Solving Quadratics
+Subtopic: Solving by factoring and the zero product property
+Subtopic: The quadratic formula and the discriminant test
+Topic 4.2: Graphing Parabolas
+Subtopic: Vertex, axis of symmetry, and x-intercepts
