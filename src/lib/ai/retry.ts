@@ -40,8 +40,14 @@ export async function withRetry<T>(
         msg.includes('TPM');
       console.warn(`Groq attempt ${attempt + 1} failed:`, msg);
 
-      // If rate limited or quota exceeded on Groq, wait 1.5s for TPM bucket to refill before retrying
+      // If rate limited or quota exceeded on Groq, check needed refill wait
       if (isRateLimit && attempt < maxRetries - 1) {
+        const match = msg.match(/try again in ([\d\.]+)s/i);
+        const retrySec = match ? parseFloat(match[1]) : 0;
+        if (retrySec > 3) {
+          console.log(`Groq TPM requires ${retrySec}s wait. Transitioning directly to Gemini fallback.`);
+          break;
+        }
         console.log('Briefly waiting 1.5s for Groq TPM bucket to refill...');
         await new Promise((r) => setTimeout(r, 1500));
         continue;
@@ -63,7 +69,7 @@ export async function withRetry<T>(
   if (useFallback) {
     try {
       console.log('Falling back to Gemini...');
-      return await withTimeout(fn(getGeminiModel()), 20000, 'Gemini');
+      return await withTimeout(fn(getGeminiModel()), 50000, 'Gemini');
     } catch (error: any) {
       console.error('Gemini fallback failed:', error?.message || error);
       throw error;

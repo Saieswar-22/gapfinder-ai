@@ -6,6 +6,7 @@ import { eq, and } from 'drizzle-orm';
 import { requireSession } from '@/lib/auth/session';
 import { retrieveChunks } from '@/lib/rag/retrieval';
 import { createAssistantStream } from '@/lib/rag/generation';
+import { CONFIG } from '@/lib/config';
 
 export const maxDuration = 60;
 
@@ -59,7 +60,7 @@ export async function POST(
       userId: session.userId,
       query: searchQuery,
       topK: 6,
-      similarityThreshold: 0.65,
+      similarityThreshold: CONFIG.SIMILARITY_THRESHOLD,
     });
 
     // Generate response stream

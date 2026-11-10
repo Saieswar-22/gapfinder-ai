@@ -1,7 +1,7 @@
 import { generateObject, streamText } from 'ai';
 import { z } from 'zod';
 import { withRetry } from '@/lib/ai/retry';
-import { getGroqModel } from '@/lib/ai/providers';
+import { getGroqModel, getGeminiModel } from '@/lib/ai/providers';
 import type { RetrievedChunk } from './retrieval';
 
 export interface Citation {
@@ -309,11 +309,18 @@ export function createAssistantStream(
   const messages: any[] = [
     {
       role: 'system',
-      content: `${SYSTEM_GROUNDING_PROMPT}
+      content: `You are GapFinder AI, an expert, encouraging, and pedagogically clear educational tutor.
+Your mission is to help the student understand this topic by thoroughly explaining concepts in your own words, synthesizing information from their study materials, and walking them through steps intuitively.
 
-Answer the student's question clearly and concisely, grounded ONLY in the source context below.
-Always refer to concepts as they appear in the material.
-If the material doesn't answer the question, state honestly that the uploaded material does not cover it.
+CRITICAL INSTRUCTIONS:
+1. Do NOT simply dump or copy-paste raw text chunks. Actively explain, synthesize, and break down concepts in natural, engaging, and clear pedagogical language.
+2. Ground all formulas, definitions, procedures, and facts strictly in the provided source context. Do not invent theorems, formulas, or claims outside the material.
+3. Structure your response clearly:
+   - **Concept Explanation**: What it is, why it matters, and the intuition behind it.
+   - **Step-by-Step Breakdown**: The exact procedure, formula, or rules as presented in the material.
+   - **Worked Examples / Practical Application**: Walk through examples from the material step-by-step.
+   - **Key Takeaways**: Important things to remember or watch out for.
+4. If the provided context does not have enough information to answer the question, state honestly what is covered and what is missing.
 
 Source Context:
 ${context}`,
@@ -322,14 +329,35 @@ ${context}`,
     { role: 'user', content: question },
   ];
 
-  const stream = streamText({
-    model: getGroqModel(),
-    messages,
-  });
+  async function* textStreamGenerator() {
+    try {
+      const stream = streamText({
+        model: getGroqModel(),
+        messages,
+      });
+      for await (const chunk of stream.textStream) {
+        yield chunk;
+      }
+    } catch (groqErr) {
+      console.warn('Groq assistant streaming failed or rate-limited. Falling back to Gemini LLM:', groqErr);
+      try {
+        const geminiStream = streamText({
+          model: getGeminiModel(),
+          messages,
+        });
+        for await (const chunk of geminiStream.textStream) {
+          yield chunk;
+        }
+      } catch (geminiErr) {
+        console.error('Gemini streaming fallback also failed:', geminiErr);
+        yield '\n\nAn error occurred while generating the explanation. Please try again.';
+      }
+    }
+  }
 
   return {
     isInsufficient: false,
-    textStream: stream.textStream,
+    textStream: textStreamGenerator(),
     citations,
   };
 }

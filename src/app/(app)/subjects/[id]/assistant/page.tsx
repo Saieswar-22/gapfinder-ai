@@ -11,6 +11,64 @@ interface ChatMessage {
   isInsufficient?: boolean;
 }
 
+function renderInlineText(text: string) {
+  const parts = text.split(/(\*\*.*?\*\*|`.*?`)/g);
+  return parts.map((part, idx) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return (
+        <strong key={idx} className="font-semibold text-gray-900">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    if (part.startsWith('`') && part.endsWith('`')) {
+      return (
+        <code key={idx} className="bg-gray-200 text-gray-800 px-1 py-0.5 rounded text-[11px] font-mono">
+          {part.slice(1, -1)}
+        </code>
+      );
+    }
+    return part;
+  });
+}
+
+function FormattedContent({ content }: { content: string }) {
+  if (!content) return null;
+  const paragraphs = content.split(/\n\s*\n/);
+
+  return (
+    <div className="space-y-2.5">
+      {paragraphs.map((p, i) => {
+        const trimmed = p.trim();
+        if (trimmed.startsWith('### ') || trimmed.startsWith('## ') || trimmed.startsWith('# ')) {
+          const heading = trimmed.replace(/^#+\s*/, '');
+          return (
+            <h4 key={i} className="font-bold text-xs text-gray-900 mt-2 mb-1 border-b border-gray-200 pb-0.5">
+              {renderInlineText(heading)}
+            </h4>
+          );
+        }
+        if (trimmed.startsWith('* ') || trimmed.startsWith('- ') || /^\d+\.\s/.test(trimmed)) {
+          const lines = trimmed.split('\n');
+          return (
+            <ul key={i} className="list-disc list-inside space-y-1 pl-1 text-xs">
+              {lines.map((line, j) => {
+                const cleaned = line.replace(/^(\*|-|\d+\.)\s*/, '');
+                return <li key={j}>{renderInlineText(cleaned)}</li>;
+              })}
+            </ul>
+          );
+        }
+        return (
+          <p key={i} className="text-xs leading-relaxed">
+            {renderInlineText(trimmed)}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function AssistantPage({
   params,
 }: {
@@ -230,7 +288,15 @@ export default function AssistantPage({
                     : 'bg-gray-100 text-gray-900 rounded-bl-none border border-gray-200'
                 }`}
               >
-                <p className="whitespace-pre-wrap">{m.content || (streaming && 'Thinking...')}</p>
+                {m.role === 'assistant' ? (
+                  m.content ? (
+                    <FormattedContent content={m.content} />
+                  ) : (
+                    <p className="text-gray-500 italic">Thinking...</p>
+                  )
+                ) : (
+                  <p className="whitespace-pre-wrap">{m.content}</p>
+                )}
 
                 {/* Grounded Citations List */}
                 {m.citations && m.citations.length > 0 && (
