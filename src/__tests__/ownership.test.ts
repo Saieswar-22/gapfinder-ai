@@ -59,3 +59,4 @@ describe('Ownership Scoping Tests', () => {
     expect(canAccessAttempt(attemptA, userB)).toBe(false);
   });
 });
+

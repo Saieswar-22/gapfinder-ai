@@ -26,3 +26,4 @@ export function getEmbeddingModel() {
     outputDimensionality: CONFIG.EMBEDDING_DIMENSION,
   });
 }
+

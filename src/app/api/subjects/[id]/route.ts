@@ -78,3 +78,4 @@ export async function DELETE(
     return NextResponse.json({ error: 'Failed to delete subject' }, { status: 500 });
   }
 }
+

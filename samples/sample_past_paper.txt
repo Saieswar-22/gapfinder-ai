@@ -17,3 +17,4 @@ Determine the point of intersection for the following system of linear equations
 Question 4 (Page 2):
 A community theater sells adult tickets for $12 each and student tickets for $7 each. During opening night, a total of 250 tickets were sold, generating $2,450 in total revenue.
 Set up and solve a system of linear equations to determine how many adult tickets and student tickets were sold.
+

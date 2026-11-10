@@ -67,7 +67,7 @@ documents (past_paper) → past_paper_questions → topics
 - [x] 10. Revision plan (allocator, adaptation, UI)
 - [x] 11. Explain-this-topic assistant
 - [x] 12. Dashboard + progress page
-- [ ] 13. Full end-to-end testing
+- [x] 13. Full end-to-end testing
 - [ ] 14. GitHub + Vercel deployment
 
 ## Threshold Config (lib/config.ts)

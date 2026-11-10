@@ -41,3 +41,4 @@ Solving by the Elimination (Addition) Method:
 2. Add the two equations together to eliminate that variable.
 3. Solve for the remaining variable.
 4. Substitute the value back to find the second variable.
+

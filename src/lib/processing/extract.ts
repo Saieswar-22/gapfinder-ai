@@ -89,3 +89,4 @@ export function hasExtractableText(pages: string[]): boolean {
 export function computeContentHash(buffer: Buffer): string {
   return crypto.createHash('sha256').update(buffer).digest('hex');
 }
+

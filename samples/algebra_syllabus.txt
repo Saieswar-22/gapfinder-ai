@@ -35,3 +35,4 @@ Subtopic: Solving by factoring and the zero product property
 Subtopic: The quadratic formula and the discriminant test
 Topic 4.2: Graphing Parabolas
 Subtopic: Vertex, axis of symmetry, and x-intercepts
+

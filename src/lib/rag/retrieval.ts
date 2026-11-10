@@ -107,3 +107,4 @@ export async function retrieveChunksForTopic(
     topK: topK || CONFIG.RETRIEVAL_TOP_K,
   });
 }
+

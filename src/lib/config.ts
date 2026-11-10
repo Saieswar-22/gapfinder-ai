@@ -8,7 +8,7 @@ export const CONFIG = {
   RECENCY_WEIGHT: parseFloat(process.env.RECENCY_WEIGHT || '0.6'),
 
   // Retrieval
-  SIMILARITY_THRESHOLD: parseFloat(process.env.SIMILARITY_THRESHOLD || '0.7'),
+  SIMILARITY_THRESHOLD: parseFloat(process.env.SIMILARITY_THRESHOLD || '0.55'),
   RETRIEVAL_TOP_K: parseInt(process.env.RETRIEVAL_TOP_K || '8'),
 
   // Chunking
@@ -31,9 +31,9 @@ export const CONFIG = {
   MIN_QUESTIONS_PER_TOPIC: 2,
 
   // Models
-  GROQ_MODEL: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
+  GROQ_MODEL: process.env.GROQ_MODEL || 'openai/gpt-oss-20b',
   GEMINI_EMBEDDING_MODEL: process.env.GEMINI_EMBEDDING_MODEL || 'gemini-embedding-001',
-  GEMINI_LLM_MODEL: process.env.GEMINI_LLM_MODEL || 'gemini-2.5-flash',
+  GEMINI_LLM_MODEL: process.env.GEMINI_LLM_MODEL || 'gemini-3.5-flash',
 
   // Auth
   RATE_LIMIT_WINDOW_MS: 15 * 60 * 1000, // 15 minutes

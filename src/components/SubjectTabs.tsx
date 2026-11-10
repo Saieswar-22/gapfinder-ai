@@ -39,3 +39,4 @@ export function SubjectTabs({ subjectId }: { subjectId: string }) {
     </div>
   );
 }
+

@@ -38,3 +38,4 @@ export async function embedTexts(texts: string[], maxRetries = 3): Promise<numbe
   }
   throw new Error('Embedding failed after retries');
 }
+

@@ -142,3 +142,4 @@ The demo user starts with an empty workspace so you can test uploading materials
 
 - **Scanned Image PDFs**: OCR is intentionally excluded. Scanned or image-only PDFs lacking a digital text layer are rejected with a clear notification.
 - **File Size Limit**: Single file upload limit is capped at 4 MB in accordance with serverless request body constraints.
+

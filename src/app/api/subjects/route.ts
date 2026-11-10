@@ -66,3 +66,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to create subject' }, { status: 500 });
   }
 }
+

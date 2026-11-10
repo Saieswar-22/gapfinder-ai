@@ -80,3 +80,4 @@ export async function DELETE(
     return NextResponse.json({ error: 'Failed to delete topic' }, { status: 500 });
   }
 }
+
