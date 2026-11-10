@@ -321,6 +321,10 @@ CRITICAL INSTRUCTIONS:
    - **Worked Examples / Practical Application**: Walk through examples from the material step-by-step.
    - **Key Takeaways**: Important things to remember or watch out for.
 4. If the provided context does not have enough information to answer the question, state honestly what is covered and what is missing.
+5. FORMATTING RULES:
+   - Write math equations naturally and cleanly using standard text and unicode (e.g., ax + b = 0, x = 4, 2/3, =>, ≠) WITHOUT raw LaTeX code tags (do NOT write \\frac, \\Rightarrow, \\[, \\], \\(, \\)).
+   - Use bold text **like this** for key terms, laws, and equations.
+   - Use clean bullet points or numbered steps for processes and solutions.
 
 Source Context:
 ${context}`,

@@ -11,8 +11,23 @@ interface ChatMessage {
   isInsufficient?: boolean;
 }
 
+function cleanMathText(str: string): string {
+  return str
+    .replace(/\\\[([\s\S]*?)\\\]/g, '$1')
+    .replace(/\\\(([\s\S]*?)\\\)/g, '$1')
+    .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '$1/$2')
+    .replace(/\\;\s*\\;\s*\\Rightarrow\s*\\;\s*\\;/g, ' => ')
+    .replace(/\\Rightarrow/g, ' => ')
+    .replace(/\\rightarrow/g, ' -> ')
+    .replace(/\\neq/g, ' ≠ ')
+    .replace(/\\ge/g, ' ≥ ')
+    .replace(/\\le/g, ' ≤ ')
+    .replace(/<br\s*\/?>/gi, ' ');
+}
+
 function renderInlineText(text: string) {
-  const parts = text.split(/(\*\*.*?\*\*|`.*?`)/g);
+  const cleaned = cleanMathText(text);
+  const parts = cleaned.split(/(\*\*.*?\*\*|`.*?`)/g);
   return parts.map((part, idx) => {
     if (part.startsWith('**') && part.endsWith('**')) {
       return (
@@ -32,6 +47,52 @@ function renderInlineText(text: string) {
   });
 }
 
+function renderTable(block: string, key: number) {
+  const rawLines = block
+    .split('\n')
+    .map((l) => l.trim())
+    .filter((l) => l.startsWith('|') && l.endsWith('|'));
+  if (rawLines.length === 0) return null;
+
+  const rows = rawLines.map((line) =>
+    line
+      .slice(1, -1)
+      .split('|')
+      .map((cell) => cell.trim())
+  );
+
+  const headerRow = rows[0];
+  const isSeparator = (r: string[]) => r.every((cell) => /^[-:\s]+$/.test(cell));
+  const dataRows = rows.slice(1).filter((r) => !isSeparator(r));
+
+  return (
+    <div key={key} className="overflow-x-auto my-3 border border-gray-300 rounded shadow-sm">
+      <table className="min-w-full text-xs text-left divide-y divide-gray-200">
+        <thead className="bg-gray-100 font-semibold text-gray-800">
+          <tr>
+            {headerRow.map((h, i) => (
+              <th key={i} className="px-3 py-2 border-r last:border-r-0 border-gray-200">
+                {renderInlineText(h)}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-100 bg-white">
+          {dataRows.map((row, rIdx) => (
+            <tr key={rIdx} className={rIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50/60'}>
+              {row.map((cell, cIdx) => (
+                <td key={cIdx} className="px-3 py-1.5 border-r last:border-r-0 border-gray-200 text-gray-800">
+                  {renderInlineText(cell)}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 function FormattedContent({ content }: { content: string }) {
   if (!content) return null;
   const paragraphs = content.split(/\n\s*\n/);
@@ -40,14 +101,31 @@ function FormattedContent({ content }: { content: string }) {
     <div className="space-y-2.5">
       {paragraphs.map((p, i) => {
         const trimmed = p.trim();
+
+        // Horizontal rule
+        if (/^[-*_]{3,}$/.test(trimmed)) {
+          return <hr key={i} className="my-3 border-gray-300" />;
+        }
+
+        // Table block
+        if (
+          trimmed.includes('|') &&
+          trimmed.split('\n').some((l) => l.trim().startsWith('|') && l.trim().endsWith('|'))
+        ) {
+          return renderTable(trimmed, i);
+        }
+
+        // Headings
         if (trimmed.startsWith('### ') || trimmed.startsWith('## ') || trimmed.startsWith('# ')) {
           const heading = trimmed.replace(/^#+\s*/, '');
           return (
-            <h4 key={i} className="font-bold text-xs text-gray-900 mt-2 mb-1 border-b border-gray-200 pb-0.5">
+            <h4 key={i} className="font-bold text-xs text-gray-900 mt-3 mb-1 border-b border-gray-200 pb-1">
               {renderInlineText(heading)}
             </h4>
           );
         }
+
+        // Lists
         if (trimmed.startsWith('* ') || trimmed.startsWith('- ') || /^\d+\.\s/.test(trimmed)) {
           const lines = trimmed.split('\n');
           return (
@@ -59,6 +137,7 @@ function FormattedContent({ content }: { content: string }) {
             </ul>
           );
         }
+
         return (
           <p key={i} className="text-xs leading-relaxed">
             {renderInlineText(trimmed)}
